@@ -8,13 +8,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 
 class HolidayForYearController extends AbstractController
 {
     #[Route('/{country}/{year}', name: 'holidays')]
     public function holidaysGroupByMonth($country, $year)
     {
-//        &year=2022&country=ago
+//        &year=2021&country=ltu
         $client = HttpClient::create();
         $contentHolidaysForYear = $client->request('GET', 'https://kayaposoft.com/enrico/json/v2.0/?action=getHolidaysForYear',
             [
@@ -31,10 +32,9 @@ class HolidayForYearController extends AbstractController
         $contentHolidaysForYear = json_decode($contentHolidaysForYear->getContent(), true);
         $groupByMonth = $this->groupByMonth('month', $contentHolidaysForYear);
         $dayStatus = $this->dayStatus($groupByMonth);
-//        $daysInRow = $this->daysInRow($dayStatus);
-//        dump($daysInRow);
-//die();
-        $result = $dayStatus;
+        $daysInRow = $this->daysInRow($dayStatus);
+
+        $result = $daysInRow;
         $response = new Response();
         $response->setContent(json_encode($result));
 
@@ -101,55 +101,25 @@ class HolidayForYearController extends AbstractController
     public function daysInRow($data){
         $result = array();
 
-        $counter = 0;
         foreach($data as $key => $d) {
-            foreach ($d as $k => $dd) {dump($d);
-//                $count = count($k);
-//                $val = $dd['date']['day'];
-////                if ($count > 0) {
-//                    for ($i = 0; $i < $count - 1; $i++) {
-//                        if ($data[$key][$i]['date']['day'] < $data[$key][$i++]['date']['day']) {
-//                            if ($val['dayStatus'] == 'free day') {
-//                                $counter++;
+            $counter = 1;
+            $count = sizeof($d);
+                if ($count > 1) {
+                    $last = $data[$key][0]['date']['day'];
+                    for ($i = 1; $i < $count; $i++) {
+                        if ($data[$key][$i]['date']['day'] == $last + 1) {
+//                            if($data[$key][$i]['dayStatus'] == 'free day'){
+                                $counter++;
 //                            }
-//                            $result[$data[$key][$i]['date']['month']][] = $val + array('daysInRow' => $counter);
-//                        }
-////                    }
-//                }
+                        }
+                        $last = $data[$key][$i]['date']['day'];
+                }
             }
-        }die();
-//                $val = $dd['date']['day'];
-//
-//                if($val>$max){
-//                    $max = $val;
-//                }
-//                dump($max);die();
-//
-//
-////                if ($data[$key][$i]['date']['day'] < $data[$key][$i++]['date']['day']) {
-////                    dump($data[$key][$i]['date']['day']);
-////                    if ($val['dayStatus'] == 'free day') {
-////                        $counter++;
-////                    }
-////                    $result[$data[$key][$i]['date']['month']][] = $val + array('daysInRow' => $counter);
-////                }
-//            }
-//            for ($i = 0; $i < $sum; $i++) {
-//                if($sum > 1) {
-//                    $val = $data[$key][$i];
-//
-//                    if ($data[$key][$i]['date']['day'] < $data[$key][$i++]['date']['day']) {
-//                        dump($data[$key][$i]['date']['day']);
-//                        if ($val['dayStatus'] == 'free day') {
-//                            $counter++;
-//                        }
-//                        $result[$data[$key][$i]['date']['month']][] = $val + array('daysInRow' => $counter);
-//                    }
-////                $result[$data[$key][$i]['date']['month']][] = $val;
-//                }
-//            }
-        dump($result);die();
-
+            for ($i = 0; $i < $count; $i++) {
+                $val = $data[$key][$i];
+                $result[$data[$key][$i]['date']['month']][] = $val + array('daysInRow' => $counter);
+            }
+        }
         return $result;
     }
 
