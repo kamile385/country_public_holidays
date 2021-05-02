@@ -31,8 +31,9 @@ class HolidayForYearController extends AbstractController
         $contentHolidaysForYear = json_decode($contentHolidaysForYear->getContent(), true);
         $groupByMonth = $this->groupByMonth('month', $contentHolidaysForYear);
         $dayStatus = $this->dayStatus($groupByMonth);
-        
-
+//        $daysInRow = $this->daysInRow($dayStatus);
+//        dump($daysInRow);
+//die();
         $result = $dayStatus;
         $response = new Response();
         $response->setContent(json_encode($result));
@@ -53,21 +54,18 @@ class HolidayForYearController extends AbstractController
         foreach($data as $d) {
             $val = $d['date'];
 
-//            foreach ($d['name'] as $text) {
-                if (array_key_exists($key, $val)) {
-                    $result[$val[$key]][] = $d;
-                } else {
-                    $result[""][] = $d;
-                }
-//            }
+            if (array_key_exists($key, $val)) {
+                $result[$val[$key]][] = $d;
+            } else {
+                $result[""][] = $d;
+            }
         }
         return $result;
     }
 
     /**
-     * Function that groups country array of associative arrays by date.
+     * Function that finds a day status.
      *
-     * @param {String} $key Property to sort by.
      * @param {Array} $data Array that stores multiple associative arrays.
      */
     function dayStatus($data) {
@@ -95,42 +93,64 @@ class HolidayForYearController extends AbstractController
         return $result;
     }
 
-//    #[Route('/{$country}/{$year}', name: 'holidays')]
-//    public function createHolidays($country, $holiday): Response
-//    {
-//        dump('ddd');die();
-//        $client = HttpClient::create();
+    /**
+     * Function that finds the maximum number of free(free day + holiday) days in a row, which will be by a given country and year
+     *
+     * @param {Array} $data Array that stores multiple associative arrays.
+     */
+    public function daysInRow($data){
+        $result = array();
+
+        $counter = 0;
+        foreach($data as $key => $d) {
+            foreach ($d as $k => $dd) {dump($d);
+//                $count = count($k);
+//                $val = $dd['date']['day'];
+////                if ($count > 0) {
+//                    for ($i = 0; $i < $count - 1; $i++) {
+//                        if ($data[$key][$i]['date']['day'] < $data[$key][$i++]['date']['day']) {
+//                            if ($val['dayStatus'] == 'free day') {
+//                                $counter++;
+//                            }
+//                            $result[$data[$key][$i]['date']['month']][] = $val + array('daysInRow' => $counter);
+//                        }
+////                    }
+//                }
+            }
+        }die();
+//                $val = $dd['date']['day'];
 //
-//        $responseHolidaysForYear = $client->request('GET',
-//            'https://kayaposoft.com/enrico/json/v2.0/?action=getHolidaysForYear&year=2022',
-//            [
-//                'headers' => [
-//                    'Cache-Control' => 'no-cache',
-//                    'Connection' => 'keep-alive'
-//                ],
-//                'query' => [
-//                    'country' => $country,
-//                    'holidayType' => $holiday
-//                ]
-//            ]);
-//        $contentHolidays = json_decode($responseHolidaysForYear->getContent(), true);
+//                if($val>$max){
+//                    $max = $val;
+//                }
+//                dump($max);die();
 //
-//        foreach($contentHolidays as $val)
-//        {
-//            // you can fetch the EntityManager via $this->getDoctrine()
-//            // or you can add an argument to the action: createProduct(EntityManagerInterface $entityManager)
-//            $entityManager = $this->getDoctrine()->getManager();
-//            $holidays = new HolidaysForYear();
-//            $holidays->setDate($val['date']);
-//            $holidays->setName($val['name']);
-//            $holidays->setHolidayType($val['holidayType']);
 //
-//            // tell Doctrine you want to (eventually) save the Product (no queries yet)
-//            $entityManager->persist($holidays);
+////                if ($data[$key][$i]['date']['day'] < $data[$key][$i++]['date']['day']) {
+////                    dump($data[$key][$i]['date']['day']);
+////                    if ($val['dayStatus'] == 'free day') {
+////                        $counter++;
+////                    }
+////                    $result[$data[$key][$i]['date']['month']][] = $val + array('daysInRow' => $counter);
+////                }
+//            }
+//            for ($i = 0; $i < $sum; $i++) {
+//                if($sum > 1) {
+//                    $val = $data[$key][$i];
 //
-//            // actually executes the queries (i.e. the INSERT query)
-//            $entityManager->flush();
-//        }
-//        return new Response('Saved new product with id '.$holidays->getId());
-//    }
+//                    if ($data[$key][$i]['date']['day'] < $data[$key][$i++]['date']['day']) {
+//                        dump($data[$key][$i]['date']['day']);
+//                        if ($val['dayStatus'] == 'free day') {
+//                            $counter++;
+//                        }
+//                        $result[$data[$key][$i]['date']['month']][] = $val + array('daysInRow' => $counter);
+//                    }
+////                $result[$data[$key][$i]['date']['month']][] = $val;
+//                }
+//            }
+        dump($result);die();
+
+        return $result;
+    }
+
 }
