@@ -17,10 +17,9 @@ class HolidayForYearController extends AbstractController
     public function holidaysGroupByMonth($country, $year)
     {
         $repositoryHolidays = $this->getDoctrine()->getRepository(HolidaysForYear::class);
-        $holidays = $repositoryHolidays->findBy(['date' => $year]);
+        $holidays = $repositoryHolidays->findBy(['date' => ['year' => $year]]);
 
         if(!$holidays) {
-            //        &year=2021&country=ltu
             $client = HttpClient::create();
             $contentHolidaysForYear = $client->request('GET', 'https://kayaposoft.com/enrico/json/v2.0/?action=getHolidaysForYear',
                 [

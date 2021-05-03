@@ -21,6 +21,7 @@ class SupportedCountriesController extends AbstractController
             $client = HttpClient::create();
             $contentCountries = $client->request('GET', 'https://kayaposoft.com/enrico/json/v2.0/?action=getSupportedCountries');
             $contentCountries = json_decode($contentCountries->getContent(), true);
+
             foreach ($contentCountries as $val) {
                 $entityManager = $this->getDoctrine()->getManager();
 
