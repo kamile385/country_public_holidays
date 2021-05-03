@@ -33,3 +33,6 @@ If you don't have the Symfony binary installed, run
 php -S localhost:8000 -t public/
 ```
 to use the built-in PHP web server or configure a web server like Nginx or Apache to run the application.
+
+Directories: url and url/{country_code}/{year}
+e.g. https://localhost:8000/ and https://localhost:8000/ltu/2021

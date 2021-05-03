@@ -20,12 +20,11 @@ class SupportedCountriesController extends AbstractController
     {
         $repositoryCountries = $this->getDoctrine()->getRepository(SupportedCountries::class);
         $countries = $repositoryCountries->findAll();
-
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
-
         if (!$countries) {
+            $encoders = [new XmlEncoder(), new JsonEncoder()];
+            $normalizers = [new ObjectNormalizer()];
+            $serializer = new Serializer($normalizers, $encoders);
+
             $client = HttpClient::create();
             $contentCountries = $client->request('GET', 'https://kayaposoft.com/enrico/json/v2.0/?action=getSupportedCountries');
             $contentCountries = json_decode($contentCountries->getContent(), true);

@@ -22,12 +22,11 @@ class HolidayForYearController extends AbstractController
     {
         $repositoryHolidays = $this->getDoctrine()->getRepository(HolidaysForYear::class);
         $holidays = $repositoryHolidays->findBy(['date' => ['year' => $year]]);
-
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-        $serializer = new Serializer($normalizers, $encoders);
-
         if(!$holidays) {
+            $encoders = [new XmlEncoder(), new JsonEncoder()];
+            $normalizers = [new ObjectNormalizer()];
+            $serializer = new Serializer($normalizers, $encoders);
+
             $client = HttpClient::create();
             $contentHolidaysForYear = $client->request('GET', 'https://kayaposoft.com/enrico/json/v2.0/?action=getHolidaysForYear',
                 [
@@ -135,9 +134,7 @@ class HolidayForYearController extends AbstractController
                     $last = $data[$key][0]['date']['day'];
                     for ($i = 1; $i < $count; $i++) {
                         if ($data[$key][$i]['date']['day'] == $last + 1) {
-//                            if($data[$key][$i]['dayStatus'] == 'free day'){
-                                $counter++;
-//                            }
+                            $counter++;
                         }
                         $last = $data[$key][$i]['date']['day'];
                 }
