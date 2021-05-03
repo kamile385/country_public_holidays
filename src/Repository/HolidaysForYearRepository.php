@@ -19,6 +19,9 @@ class HolidaysForYearRepository extends ServiceEntityRepository
         parent::__construct($registry, HolidaysForYear::class);
     }
 
+    // /**
+    //  * @return HolidaysForYear[] Returns an array of HolidaysForYear objects
+    //  */
     /*
     public function findByExampleField($value)
     {
@@ -32,6 +35,7 @@ class HolidaysForYearRepository extends ServiceEntityRepository
         ;
     }
     */
+
     /*
     public function findOneBySomeField($value): ?HolidaysForYear
     {

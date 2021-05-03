@@ -16,25 +16,24 @@ class HolidayForYearController extends AbstractController
     #[Route('/{country}/{year}', name: 'holidays')]
     public function holidaysGroupByMonth($country, $year)
     {
-//        &year=2021&country=ltu
-        $client = HttpClient::create();
-        $contentHolidaysForYear = $client->request('GET', 'https://kayaposoft.com/enrico/json/v2.0/?action=getHolidaysForYear',
-            [
-                'headers' => [
-                                    'Cache-Control' => 'no-cache',
-                                    'Connection' => 'keep-alive'
-                                ],
-                                'query' => [
-                                    'year' => $year,
-                                    'country' => $country
-                                ]
-            ]);
-        $contentHolidaysForYear = json_decode($contentHolidaysForYear->getContent(), true);
         $repositoryHolidays = $this->getDoctrine()->getRepository(HolidaysForYear::class);
-
         $holidays = $repositoryHolidays->findBy(['date' => $year]);
 
         if(!$holidays) {
+            //        &year=2021&country=ltu
+            $client = HttpClient::create();
+            $contentHolidaysForYear = $client->request('GET', 'https://kayaposoft.com/enrico/json/v2.0/?action=getHolidaysForYear',
+                [
+                    'headers' => [
+                        'Cache-Control' => 'no-cache',
+                        'Connection' => 'keep-alive'
+                    ],
+                    'query' => [
+                        'year' => $year,
+                        'country' => $country
+                    ]
+                ]);
+            $contentHolidaysForYear = json_decode($contentHolidaysForYear->getContent(), true);
             foreach ($contentHolidaysForYear as $val) {
                 $entityManager = $this->getDoctrine()->getManager();
 
