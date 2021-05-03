@@ -8,6 +8,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\SupportedCountries;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class SupportedCountriesController extends AbstractController
 {
@@ -16,6 +20,10 @@ class SupportedCountriesController extends AbstractController
     {
         $repositoryCountries = $this->getDoctrine()->getRepository(SupportedCountries::class);
         $countries = $repositoryCountries->findAll();
+
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
 
         if (!$countries) {
             $client = HttpClient::create();
@@ -26,12 +34,12 @@ class SupportedCountriesController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
 
                 $countries = new SupportedCountries();
-                $countries->setCountryCode($val['countryCode']);
-                $countries->setRegions($val['regions']);
-                $countries->setHolidayTypes($val['holidayTypes']);
-                $countries->setFullName($val['fullName']);
-                $countries->setFromDate($val['fromDate']);
-                $countries->setToDate($val['toDate']);
+                $countries->setCountryCode($serializer->serialize($val['countryCode'], 'json'));
+                $countries->setRegions($serializer->serialize($val['regions'], 'json'));
+                $countries->setHolidayTypes($serializer->serialize($val['holidayTypes'], 'json'));
+                $countries->setFullName($serializer->serialize($val['fullName'], 'json'));
+                $countries->setFromDate($serializer->serialize($val['fromDate'], 'json'));
+                $countries->setToDate($serializer->serialize($val['toDate'], 'json'));
 
                 $entityManager->persist($countries);
                 $entityManager->flush();

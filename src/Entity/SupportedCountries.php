@@ -66,24 +66,24 @@ class SupportedCountries
         return $this;
     }
 
-    public function getRegions(): ?array
+    public function getRegions(): ?string
     {
         return $this->regions;
     }
 
-    public function setRegions(array $regions): self
+    public function setRegions(string $regions): self
     {
         $this->regions = $regions;
 
         return $this;
     }
 
-    public function getHolidayTypes(): ?array
+    public function getHolidayTypes(): ?string
     {
         return $this->holidayTypes;
     }
 
-    public function setHolidayTypes(array $holidayTypes): self
+    public function setHolidayTypes(string $holidayTypes): self
     {
         $this->holidayTypes = $holidayTypes;
 
@@ -102,24 +102,24 @@ class SupportedCountries
         return $this;
     }
 
-    public function getFromDate(): ?array
+    public function getFromDate(): ?string
     {
         return $this->fromDate;
     }
 
-    public function setFromDate(array $fromDate): self
+    public function setFromDate(string $fromDate): self
     {
         $this->fromDate = $fromDate;
 
         return $this;
     }
 
-    public function getToDate(): ?array
+    public function getToDate(): ?string
     {
         return $this->toDate;
     }
 
-    public function setToDate(array $toDate): self
+    public function setToDate(string $toDate): self
     {
         $this->toDate = $toDate;
 

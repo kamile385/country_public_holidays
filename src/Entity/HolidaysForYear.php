@@ -37,24 +37,24 @@ class HolidaysForYear
         return $this->id;
     }
 
-    public function getDate(): ?array
+    public function getDate(): ?string
     {
         return $this->date;
     }
 
-    public function setDate(array $date): self
+    public function setDate(string $date): self
     {
         $this->date = $date;
 
         return $this;
     }
 
-    public function getName(): ?array
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(array $name): self
+    public function setName(string $name): self
     {
         $this->name = $name;
 

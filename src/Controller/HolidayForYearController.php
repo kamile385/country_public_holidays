@@ -10,6 +10,10 @@ use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Encoder\XmlEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class HolidayForYearController extends AbstractController
 {
@@ -18,6 +22,10 @@ class HolidayForYearController extends AbstractController
     {
         $repositoryHolidays = $this->getDoctrine()->getRepository(HolidaysForYear::class);
         $holidays = $repositoryHolidays->findBy(['date' => ['year' => $year]]);
+
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+        $serializer = new Serializer($normalizers, $encoders);
 
         if(!$holidays) {
             $client = HttpClient::create();
@@ -37,9 +45,9 @@ class HolidayForYearController extends AbstractController
                 $entityManager = $this->getDoctrine()->getManager();
 
                 $holidays = new HolidaysForYear();
-                $holidays->setDate($val['date']);
-                $holidays->setName($val['name']);
-                $holidays->setHolidayType(array('holidayType' => $val['holidayType']));
+                $holidays->setDate($serializer->serialize($val['date'],'json'));
+                $holidays->setName($serializer->serialize($val['name'], 'json'));
+                $holidays->setHolidayType(array('holidayType' => $serializer->serialize($val['holidayType'], 'json')));
 
                 $entityManager->persist($holidays);
                 $entityManager->flush();
