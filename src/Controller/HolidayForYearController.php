@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 
+use App\Entity\HolidaysForYear;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,8 +29,28 @@ class HolidayForYearController extends AbstractController
                                     'country' => $country
                                 ]
             ]);
-
         $contentHolidaysForYear = json_decode($contentHolidaysForYear->getContent(), true);
+        $repositoryHolidays = $this->getDoctrine()->getRepository(HolidaysForYear::class);
+
+        $holidays = $repositoryHolidays->findBy(['date' => $year]);
+
+        if(!$holidays) {
+            foreach ($contentHolidaysForYear as $val) {
+                $entityManager = $this->getDoctrine()->getManager();
+
+                $holidays = new HolidaysForYear();
+                $holidays->setDate($val['date']);
+                $holidays->setName($val['name']);
+                $holidays->setHolidayType(array('holidayType' => $val['holidayType']));
+
+                $entityManager->persist($holidays);
+                $entityManager->flush();
+            }
+        } else {
+            for ($i = 0; $i < count($holidays); $i++) {
+                $contentHolidaysForYear = $holidays[$i];
+            }
+        }
         $groupByMonth = $this->groupByMonth('month', $contentHolidaysForYear);
         $dayStatus = $this->dayStatus($groupByMonth);
         $daysInRow = $this->daysInRow($dayStatus);
