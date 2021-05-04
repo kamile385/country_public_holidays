@@ -10,7 +10,7 @@
 #### Requirements:
 1. README.md with deployment instructions
 2. Database - MySQL
-3. Version control - GIT(bitbucket, github or gitlab)
+3. Version control - GIT(bitbucket, gitHub or gitlab)
 4. API documentation - generated with https://symfony.com/doc/current/bundles/NelmioApiDocBundle/index.html
 5. Deployment - project must be placed on the internet and publicly available (e.g. free hosting available at heroku.com)
 #### Installation:
@@ -34,5 +34,15 @@ php -S localhost:8000 -t public/
 ```
 to use the built-in PHP web server or configure a web server like Nginx or Apache to run the application.
 
-Directories: url and url/{country_code}/{year}
+Web address: url/ and url/{country_code}/{year}
+\
 e.g. https://localhost:8000/ and https://localhost:8000/ltu/2021
+
+Project is deployed to **Heroku**
+and publicly available at https://country-public-holidays.herokuapp.com/
+
+Web address: url/ and url/{country_code}/{year}
+\
+e.g. https://country-public-holidays.herokuapp.com/ and 
+\
+https://country-public-holidays.herokuapp.com/ltu/2021
